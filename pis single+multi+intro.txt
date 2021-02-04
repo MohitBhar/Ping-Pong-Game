@@ -1,0 +1,286 @@
+int x,y,w,h,speedx,speedy;
+int paddlexl,paddleyl,paddlew,paddleh,paddles;
+int paddlexr,paddleyr;
+boolean upl,downl;
+boolean upr,downr;
+int scorer, scorel;
+int winscore;
+int mode;
+int intro;
+int multi;
+int single;
+int x1,y1,w1,h1,speedx1,speedy1;
+int paddlex1,paddley1,paddlew1,paddleh1,paddles1;
+int lives;
+int winscore1;
+
+ void setup(){
+ 
+ size(500,500);
+  x=width/2;
+  y=height/2;
+  w=30;
+  h=30;
+  speedx=2;
+  speedy=3;
+  
+  textSize(30);
+  textAlign(CENTER,CENTER);
+  
+  rectMode(CENTER);
+  paddlexl=40;
+  paddlexr=width-40;
+  paddleyl=height/2;
+  paddleyr=height/2;
+  paddlew=20;
+  paddleh=100;
+  paddles=15;
+  int scorel = 0;
+  int scorer = 0;
+  winscore=3;
+  mode=0;
+  intro=0;
+  multi=1;
+  single=2;
+  size(500,500);
+x1=width/2;
+y1=height/2;
+w1=30;
+h1=30;
+speedx1=3;
+speedy1=2;
+textSize(30);
+textAlign(CENTER,CENTER);
+
+rectMode(CENTER);
+paddlex1=width/2;
+paddley1=height-20;
+paddlew1=100;
+paddleh1=20;
+paddles1=15;
+winscore1=0; lives=11;
+bg=loadImage("pingpong.jpg");
+  
+  }
+ void draw(){
+ background(0);
+ if (mode==intro){
+  pageintro();
+  if (keyPressed){
+    if (keyCode==" ")
+   { mode=1; 
+   ;}
+    else if(keyCode=UP)
+    {mode=single;} }  
+   }     
+ else if (mode==multi)
+ {
+ 
+ drawcircle();
+ movecircle();
+ bounceoff();
+ drawpaddle();;
+ movepaddle();
+ restrictpaddle();
+ contactpaddle();
+ keyPressed();
+ keyReleased();
+ score();
+ gameover();
+ gameoverpage();
+ }
+ else if(mode==single)
+ {background(180,155,155); 
+drawcircle1();
+movecircle1();
+bounceoff1();
+drawpaddle1();
+movepaddle1();
+restrictpaddle1();
+contactpaddle1();
+gameover1();
+keyPressed();
+keyReleased();
+score1();
+gameover1();
+ 
+ 
+ }
+ 
+ 
+ }
+ void drawcircle(){
+ fill(255,0,0);
+ ellipse(x,y,w,h);
+ }
+ void movecircle(){
+ x = x + speedx;
+ y = y+ speedy;
+ }
+ void bounceoff(){
+ if (x > width - w/2)
+  { scorel=scorel+1;
+    speedx=-speedx; 
+    setup();
+  }
+  else if (x<0 + w/2)
+   { scorer=scorer+1; setup();
+  }
+ 
+  if (y > height-h/2)
+  { speedy=-speedy; 
+  }
+  else if (y <0 + h/2)
+  { speedy=-speedy; }
+ }
+ 
+ void drawpaddle(){
+ fill(0,0,255);
+ rect(paddlexl,paddleyl,paddlew,paddleh);
+ 
+ fill(255,0,0);
+ rect(paddlexr,paddleyr,paddlew,paddleh);
+ }
+ void keyPressed(){
+ if (key == 'q' || key== 'Q')
+ { upl= true;}
+ else if( key=='a'|| key=='A')
+ { downl=true;}
+ if (keyCode ==  UP )
+ { upr= true;}
+ else if( keyCode== DOWN)
+ { downr=true;}
+  }
+ void keyReleased(){ 
+   if (key == 'q' || key == 'Q')
+ { upl= false;}
+ else if( key =='a'|| key =='A')
+ { downl=false;}
+ if (keyCode ==  UP )
+ { upr= false;}
+ else if( keyCode== DOWN)
+ { downr=false;}
+ }
+ void movepaddle(){
+   if (upl)
+   { paddleyl = paddleyl - paddles;}
+   if (downl)
+  { paddleyl= paddleyl + paddles;}
+  if (upr)
+   { paddleyr = paddleyr - paddles;}
+   if (downr)
+  { paddleyr= paddleyr + paddles;}
+  }
+  void restrictpaddle(){
+  if (paddleyl - paddleh/2 <0)
+  { paddleyl=paddleyl + paddles ;}
+  if (paddleyl + paddleh/2 > height)
+  { paddleyl= paddleyl -paddles;}
+  if (paddleyr - paddleh/2 <0)
+  { paddleyr=paddleyr + paddles ;}
+  if (paddleyr + paddleh/2 > height)
+  { paddleyr= paddleyr -paddles;}
+  }
+  void contactpaddle(){
+  if (x-w/2 <  paddlexl + paddlew/2 && y-h/2 < paddleyl+paddleh/2 &&  y+h/2 > paddleyl - paddleh/2)               
+    {speedx=-speedx;}
+  if (x+w/2 >  paddlexr - paddlew/2 && y-h/2 < paddleyr+paddleh/2 &&  y+h/2 > paddleyr - paddleh/2)               
+    {speedx=-speedx;}
+   }
+   void score(){
+   fill(255);
+   text(scorel,100,50);
+   text(scorer,width-100,50);
+    }
+    void gameover(){
+    if(scorer==winscore){
+    gameoverpage("RED WINS", color(255,0,0));
+    
+    }
+    if(scorel==winscore){
+    gameoverpage("BLUE WINS", color(0,0,255));
+    }
+  }
+  void pageintro(){
+    background(bg);
+    textSize(30);
+    text("welcome to PINGY PONG press \n space bar  to multiplayer\n up key to single player   ",250,100);
+    }
+ 
+ 
+  void gameoverpage(String text, color c){
+    
+   speedx=0;
+   speedy=0;
+   text("GAME OVER", width/2,height/2 - 40);
+   fill(0,255,0);
+   text(text,width/2,height/2);
+   text("CLICK TO PLAY AGAIN",width/2, height/3-40);
+    if (mousePressed){
+      scorer=0;
+      scorel=0;
+      speedx=2;
+      speedy=3;
+  }}
+  void drawcircle1(){
+  fill(0,0,0);
+  ellipse(x1,y1,w1,h1);
+  }
+void movecircle1(){x1=x1+ speedx1;
+y1=y1+speedy1;
+}
+void bounceoff1(){
+if (x1> width - w1/2)
+{ speedx1 = -speedx1;}
+else if (x1 < 0 + w1/2)
+{speedx1=-speedx1;}
+if (y1 > height- h1/2)
+{ 
+  lives=lives-1;
+  setup();
+  
+}
+else if (y1< 0+h1/2)
+{speedy1=-speedy1;}
+}
+void drawpaddle1(){fill(0,0,255);
+rect(paddlex1,paddley1,paddlew1,paddleh1);
+}
+
+
+void movepaddle1(){
+if (up)
+{paddlex1= paddlex1- paddles1;}
+if (down)
+{ paddlex1=paddlex1 + paddles1;}
+}
+void restrictpaddle1(){
+if(paddlex1 - paddlew1/2 <0)
+{paddlex1=paddlex1 + paddles1;}
+if (paddlex1 + paddlew1/2 > width)
+{ paddlex1= paddlex1- paddles1;}
+}
+void contactpaddle1(){
+}
+void gameover1(){
+ if (lives==winscore1){
+   gameoverpage("ALL LIVES OVER", color(255,0,0));
+   }}
+void score1(){
+  fill(255);
+  text(lives,50,50);
+  }
+  void gameoverpage1(String text,color c){
+  speedx=0;
+  speedy=0;
+  text("GAME OVER" ,width/2, height/2-40);
+  fill(0,255,0);
+ text(text,width/2,height/2);
+ text("CLICK TO PLAY AGAIN", width/2,height/3-40);
+ if(mousePressed)
+ {lives=11;
+ speedx1=3;
+ speedy1=2;}
+ }
+  
+

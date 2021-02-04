@@ -1,0 +1,152 @@
+int x,y,w,h,speedx,speedy;
+int paddlexl,paddleyl,paddlew,paddleh,paddles;
+int paddlexr,paddleyr;
+boolean upl,downl;
+boolean upr,downr;
+int scorer, scorel;
+int winscore;
+ void setup(){
+ size(500,500);
+  x=width/2;
+  y=height/2;
+  w=30;
+  h=30;
+  speedx=2;
+  speedy=3;
+  
+  textSize(30);
+  textAlign(CENTER,CENTER);
+  
+  rectMode(CENTER);
+  paddlexl=40;
+  paddlexr=width-40;
+  paddleyl=height/2;
+  paddleyr=height/2;
+  paddlew=20;
+  paddleh=100;
+  paddles=15;
+  int scorel = 0;
+  int scorer = 0;
+  winscore=3;
+  
+ }
+ void draw(){
+ background(0);
+ drawcircle();
+ movecircle();
+ bounceoff();
+ drawpaddle();
+ movepaddle();
+ restrictpaddle();
+ contactpaddle();
+ keyPressed();
+ keyReleased();
+ score();
+ gameover();
+ 
+}
+ void drawcircle(){
+ fill(255,0,0);
+ ellipse(x,y,w,h);
+ }
+ void movecircle(){
+ x = x + speedx;
+ y = y+ speedy;
+ }
+ void bounceoff(){
+ if (x > width - w/2)
+  { scorel=scorel+1;
+    speedx=-speedx; 
+    setup();
+  }
+  else if (x<0 + w/2)
+   { scorer=scorer+1; setup();
+  }
+ 
+  if (y > height-h/2)
+  { speedy=-speedy; 
+  }
+  else if (y <0 + h/2)
+  { speedy=-speedy; }
+ }
+ void drawpaddle(){
+ fill(0,0,255);
+ rect(paddlexl,paddleyl,paddlew,paddleh);
+ 
+ fill(255,0,0);
+ rect(paddlexr,paddleyr,paddlew,paddleh);
+ }
+ void keyPressed(){
+ if (key == 'q' || key== 'Q')
+ { upl= true;}
+ else if( key=='a'|| key=='A')
+ { downl=true;}
+ if (keyCode ==  UP )
+ { upr= true;}
+ else if( keyCode== DOWN)
+ { downr=true;}
+  }
+ void keyReleased(){ 
+   if (key == 'q' || key == 'Q')
+ { upl= false;}
+ else if( key =='a'|| key =='A')
+ { downl=false;}
+ if (keyCode ==  UP )
+ { upr= false;}
+ else if( keyCode== DOWN)
+ { downr=false;}
+ }
+ void movepaddle(){
+   if (upl)
+   { paddleyl = paddleyl - paddles;}
+   if (downl)
+  { paddleyl= paddleyl + paddles;}
+  if (upr)
+   { paddleyr = paddleyr - paddles;}
+   if (downr)
+  { paddleyr= paddleyr + paddles;}
+  }
+  void restrictpaddle(){
+  if (paddleyl - paddleh/2 <0)
+  { paddleyl=paddleyl + paddles ;}
+  if (paddleyl + paddleh/2 > height)
+  { paddleyl= paddleyl -paddles;}
+  if (paddleyr - paddleh/2 <0)
+  { paddleyr=paddleyr + paddles ;}
+  if (paddleyr + paddleh/2 > height)
+  { paddleyr= paddleyr -paddles;}
+  }
+  void contactpaddle(){
+  if (x-w/2 <  paddlexl + paddlew/2 && y-h/2 < paddleyl+paddleh/2 &&  y+h/2 > paddleyl - paddleh/2)               
+    {speedx=-speedx;}
+  if (x+w/2 >  paddlexr - paddlew/2 && y-h/2 < paddleyr+paddleh/2 &&  y+h/2 > paddleyr - paddleh/2)               
+    {speedx=-speedx;}
+   }
+   void score(){
+   fill(255);
+   text(scorel,100,50);
+   text(scorer,width-100,50);
+    }
+    void gameover(){
+    if(scorer==winscore){
+    gameoverpage("RED WINS", color(255,0,0));
+    
+    }
+    if(scorel==winscore){
+    gameoverpage("BLUE WINS", color(0,0,255));
+    }
+  }
+  void gameoverpage(String text, color c){
+    
+   speedx=0;
+   speedy=0;
+   text("GAME OVER", width/2,height/2 - 40);
+   fill(0,255,0);
+   text(text,width/2,height/2);
+   text("CLICK TO PLAY AGAIN",width/2, height/3-40);
+    if (mousePressed){
+      scorer=0;
+      scorel=0;
+      speedx=2;
+      speedy=3;
+  }}
